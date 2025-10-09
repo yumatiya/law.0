@@ -10,7 +10,15 @@ import {
   Gavel,
   BarChart3,
   Settings,
-  GraduationCap
+  GraduationCap,
+  DollarSign,
+  Rocket,
+  Shield,
+  Newspaper,
+  Heart,
+  Languages,
+  FileSearch,
+  Users
 } from "lucide-react";
 
 import {
@@ -46,6 +54,19 @@ const lawNavigationItems: NavigationItem[] = [
   { title: "Mock Court", url: ROUTES.MOCK_COURT, icon: Gavel, profiles: ['lawyer'] },
   { title: "Draft Builder", url: ROUTES.DRAFT_BUILDER, icon: FileText, profiles: ['lawyer'] },
   { title: "Statute Navigator", url: ROUTES.STATUTE_NAVIGATOR, icon: Scale, profiles: ['lawyer'] },
+  { title: "Finance + Law", url: "/finance-law", icon: DollarSign, profiles: ['lawyer'] },
+  { title: "Courtroom VR", url: "/courtroom-vr", icon: Gavel, profiles: ['lawyer'] },
+  { title: "Startup Builder", url: "/startup-builder", icon: Rocket, profiles: ['lawyer'] },
+  { title: "Rights Guardian", url: "/rights-guardian", icon: Shield, profiles: ['lawyer'] },
+  { title: "Legal News", url: "/legal-news", icon: Newspaper, profiles: ['lawyer'] },
+  { title: "Evidence Analyzer", url: "/evidence-analyzer", icon: FileSearch, profiles: ['lawyer'] },
+];
+
+const studentNavigationItems: NavigationItem[] = [
+  { title: "Law Teacher", url: "/law-teacher", icon: BookOpen, profiles: ['school', 'college'] },
+  { title: "Emotional Support", url: "/emotional-support", icon: Heart },
+  { title: "Voice Translator", url: "/voice-translator", icon: Languages },
+  { title: "Collaboration Hub", url: "/collaboration-hub", icon: Users },
 ];
 
 const generalItems: NavigationItem[] = [
@@ -126,6 +147,32 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
+
+        {/* Student Tools */}
+        <SidebarGroup>
+          <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
+            Tools
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {studentNavigationItems
+                .filter(shouldShowItem)
+                .map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <NavLink 
+                        to={item.url} 
+                        className={({ isActive }) => getNavCls(isActive)}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {!isCollapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
         {/* General Navigation */}
         <SidebarGroup>
