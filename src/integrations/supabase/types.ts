@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_chat_history: {
+        Row: {
+          created_at: string
+          id: string
+          language: string
+          message: string
+          mode: string
+          response: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language?: string
+          message: string
+          mode: string
+          response: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language?: string
+          message?: string
+          mode?: string
+          response?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       chat_rooms: {
         Row: {
           created_at: string | null
@@ -29,6 +59,232 @@ export type Database = {
           created_at?: string | null
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      ebook_chapters: {
+        Row: {
+          chapter_number: number
+          content: string | null
+          created_at: string
+          ebook_id: string
+          id: string
+          title: string
+        }
+        Insert: {
+          chapter_number: number
+          content?: string | null
+          created_at?: string
+          ebook_id: string
+          id?: string
+          title: string
+        }
+        Update: {
+          chapter_number?: number
+          content?: string | null
+          created_at?: string
+          ebook_id?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_chapters_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ebooks: {
+        Row: {
+          author: string | null
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          file_type: string | null
+          file_url: string | null
+          grade_level: string | null
+          id: string
+          language: string | null
+          mode: string
+          stream: string | null
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          file_type?: string | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          language?: string | null
+          mode: string
+          stream?: string | null
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          file_type?: string | null
+          file_url?: string | null
+          grade_level?: string | null
+          id?: string
+          language?: string | null
+          mode?: string
+          stream?: string | null
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      legal_cases: {
+        Row: {
+          arguments_defense: string | null
+          arguments_prosecution: string | null
+          case_date: string | null
+          case_name: string
+          case_type: string
+          citation: string
+          court: string
+          created_at: string
+          facts: string | null
+          id: string
+          judgment: string | null
+          legal_sections: string[] | null
+          related_acts: string[] | null
+          summary: string | null
+          video_url: string | null
+          year: number
+        }
+        Insert: {
+          arguments_defense?: string | null
+          arguments_prosecution?: string | null
+          case_date?: string | null
+          case_name: string
+          case_type: string
+          citation: string
+          court: string
+          created_at?: string
+          facts?: string | null
+          id?: string
+          judgment?: string | null
+          legal_sections?: string[] | null
+          related_acts?: string[] | null
+          summary?: string | null
+          video_url?: string | null
+          year: number
+        }
+        Update: {
+          arguments_defense?: string | null
+          arguments_prosecution?: string | null
+          case_date?: string | null
+          case_name?: string
+          case_type?: string
+          citation?: string
+          court?: string
+          created_at?: string
+          facts?: string | null
+          id?: string
+          judgment?: string | null
+          legal_sections?: string[] | null
+          related_acts?: string[] | null
+          summary?: string | null
+          video_url?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
+      mock_court_sessions: {
+        Row: {
+          case_id: string | null
+          completed_at: string | null
+          feedback: string | null
+          id: string
+          recording_url: string | null
+          role: string
+          score: number | null
+          session_data: Json | null
+          started_at: string
+          user_id: string
+          verdict: string | null
+        }
+        Insert: {
+          case_id?: string | null
+          completed_at?: string | null
+          feedback?: string | null
+          id?: string
+          recording_url?: string | null
+          role: string
+          score?: number | null
+          session_data?: Json | null
+          started_at?: string
+          user_id: string
+          verdict?: string | null
+        }
+        Update: {
+          case_id?: string | null
+          completed_at?: string | null
+          feedback?: string | null
+          id?: string
+          recording_url?: string | null
+          role?: string
+          score?: number | null
+          session_data?: Json | null
+          started_at?: string
+          user_id?: string
+          verdict?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_court_sessions_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "legal_cases"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_modes: {
+        Row: {
+          created_at: string
+          grade_level: string | null
+          id: string
+          mode: string
+          preferred_language: string | null
+          stream: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          grade_level?: string | null
+          id?: string
+          mode: string
+          preferred_language?: string | null
+          stream?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          grade_level?: string | null
+          id?: string
+          mode?: string
+          preferred_language?: string | null
+          stream?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
