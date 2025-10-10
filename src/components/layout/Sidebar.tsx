@@ -3,7 +3,8 @@ import {
   Home, 
   MessageSquare, 
   Target, 
-  BookOpen, 
+  BookOpen,
+  Library,
   User, 
   Scale, 
   FileText, 
@@ -64,6 +65,7 @@ const lawNavigationItems: NavigationItem[] = [
 
 const studentNavigationItems: NavigationItem[] = [
   { title: "Law Teacher", url: "/law-teacher", icon: BookOpen, profiles: ['school', 'college'] },
+  { title: "eBook Library", url: "/ebook-library", icon: Library },
   { title: "Emotional Support", url: "/emotional-support", icon: Heart },
   { title: "Voice Translator", url: "/voice-translator", icon: Languages },
   { title: "Collaboration Hub", url: "/collaboration-hub", icon: Users },

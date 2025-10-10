@@ -16,7 +16,7 @@ serve(async (req) => {
     if (action === 'start') {
       return new Response(
         JSON.stringify({ 
-          intro: "Court is now in session. AI Judge presiding. State your case or begin your argument." 
+          intro: "नमस्ते | Welcome to Law.Gen AI Courtroom Simulation 2.0. This is a voice-interactive courtroom where you can practice with AI Judge, AI Lawyers, and receive real-time feedback. Court is now in session. AI Judge presiding. Please state your case, role (Judge, Prosecutor, Defense, Witness, Observer), or begin your argument. The system will provide objections, verdicts, and performance feedback in real-time. You may speak in any Indian language." 
         }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

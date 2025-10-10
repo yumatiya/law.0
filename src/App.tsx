@@ -12,6 +12,7 @@ import Chat from "./pages/Chat";
 import Practice from "./pages/Practice";
 import Library from "./pages/Library";
 import MockCourt from "./pages/MockCourt";
+import EBookLibrary from "./pages/EBookLibrary";
 import DraftBuilder from "./pages/DraftBuilder";
 import StatuteNavigation from "./pages/StatuteNavigation";
 import FinanceLaw from "./pages/FinanceLaw";
@@ -54,6 +55,7 @@ const AppContent = () => {
         <Route path="/voice-translator" element={<VoiceTranslator />} />
         <Route path="/evidence-analyzer" element={<EvidenceAnalyzer />} />
         <Route path="/law-teacher" element={<LawTeacher />} />
+        <Route path="/ebook-library" element={<EBookLibrary />} />
         <Route path="/collaboration-hub" element={<CollaborationHub />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
