@@ -255,6 +255,153 @@ export type Database = {
           },
         ]
       }
+      reading_progress: {
+        Row: {
+          current_chapter_id: string | null
+          current_page: number | null
+          ebook_id: string
+          id: string
+          last_read_at: string
+          progress_percentage: number | null
+          total_pages: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_chapter_id?: string | null
+          current_page?: number | null
+          ebook_id: string
+          id?: string
+          last_read_at?: string
+          progress_percentage?: number | null
+          total_pages?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          current_chapter_id?: string | null
+          current_page?: number | null
+          ebook_id?: string
+          id?: string
+          last_read_at?: string
+          progress_percentage?: number | null
+          total_pages?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_progress_current_chapter_id_fkey"
+            columns: ["current_chapter_id"]
+            isOneToOne: false
+            referencedRelation: "ebook_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_progress_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_bookmarks: {
+        Row: {
+          chapter_id: string | null
+          created_at: string
+          ebook_id: string
+          id: string
+          note: string | null
+          page_number: number | null
+          user_id: string
+        }
+        Insert: {
+          chapter_id?: string | null
+          created_at?: string
+          ebook_id: string
+          id?: string
+          note?: string | null
+          page_number?: number | null
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string | null
+          created_at?: string
+          ebook_id?: string
+          id?: string
+          note?: string | null
+          page_number?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_bookmarks_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "ebook_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_bookmarks_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_highlights: {
+        Row: {
+          chapter_id: string | null
+          color: string | null
+          created_at: string
+          ebook_id: string
+          highlighted_text: string
+          id: string
+          note: string | null
+          page_number: number | null
+          user_id: string
+        }
+        Insert: {
+          chapter_id?: string | null
+          color?: string | null
+          created_at?: string
+          ebook_id: string
+          highlighted_text: string
+          id?: string
+          note?: string | null
+          page_number?: number | null
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string | null
+          color?: string | null
+          created_at?: string
+          ebook_id?: string
+          highlighted_text?: string
+          id?: string
+          note?: string | null
+          page_number?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_highlights_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "ebook_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_highlights_ebook_id_fkey"
+            columns: ["ebook_id"]
+            isOneToOne: false
+            referencedRelation: "ebooks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_modes: {
         Row: {
           created_at: string
