@@ -6,7 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Book, Download, Search, BookOpen, GraduationCap, Scale } from 'lucide-react';
+import { Book, Download, Search, BookOpen, GraduationCap, Scale, Play } from 'lucide-react';
+import { BookViewer } from '@/components/ebook/BookViewer';
 
 interface EBook {
   id: string;
@@ -25,6 +26,7 @@ const EBookLibrary = () => {
   const [ebooks, setEbooks] = useState<EBook[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentMode, setCurrentMode] = useState<'school' | 'college' | 'lawyer'>('school');
+  const [selectedBook, setSelectedBook] = useState<EBook | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -64,11 +66,21 @@ const EBookLibrary = () => {
     }
   };
 
+  if (selectedBook) {
+    return (
+      <BookViewer
+        ebookId={selectedBook.id}
+        title={selectedBook.title}
+        onClose={() => setSelectedBook(null)}
+      />
+    );
+  }
+
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Law.Gen eBook Library</h1>
-        <p className="text-muted-foreground">Access comprehensive legal and academic resources in multiple languages</p>
+        <h1 className="text-4xl font-bold mb-2">📚 LAW.GEN eBook Library</h1>
+        <p className="text-muted-foreground">Access comprehensive legal and academic resources in multiple languages with AI-powered features</p>
       </div>
 
       <Tabs value={currentMode} onValueChange={(value) => setCurrentMode(value as any)} className="mb-6">
@@ -124,12 +136,21 @@ const EBookLibrary = () => {
                         {book.description && (
                           <p className="text-sm line-clamp-2">{book.description}</p>
                         )}
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <Badge variant="secondary">{book.language}</Badge>
-                          <Button size="sm" variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="default"
+                              onClick={() => setSelectedBook(book)}
+                            >
+                              <Play className="h-4 w-4 mr-2" />
+                              Read
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -171,12 +192,21 @@ const EBookLibrary = () => {
                         {book.description && (
                           <p className="text-sm line-clamp-2">{book.description}</p>
                         )}
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <Badge variant="secondary">{book.language}</Badge>
-                          <Button size="sm" variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="default"
+                              onClick={() => setSelectedBook(book)}
+                            >
+                              <Play className="h-4 w-4 mr-2" />
+                              Read
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -216,12 +246,21 @@ const EBookLibrary = () => {
                         {book.description && (
                           <p className="text-sm line-clamp-2">{book.description}</p>
                         )}
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <Badge variant="secondary">{book.language}</Badge>
-                          <Button size="sm" variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="default"
+                              onClick={() => setSelectedBook(book)}
+                            >
+                              <Play className="h-4 w-4 mr-2" />
+                              Read
+                            </Button>
+                            <Button size="sm" variant="outline">
+                              <Download className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>
