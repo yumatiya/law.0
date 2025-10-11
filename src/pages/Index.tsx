@@ -1,11 +1,28 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from "@/contexts/AppContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, BookOpen, Target, Users, FileText, BarChart, Scale, Settings, User } from "lucide-react";
+import { Sparkles, BookOpen, Target, Users, FileText, BarChart, Scale, Settings, User, GraduationCap, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
   const { state } = useApp();
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const getQuickActionsByProfile = () => {
     const baseActions = [
@@ -32,15 +49,36 @@ const Index = () => {
   const quickActions = getQuickActionsByProfile();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/10 to-background">
       <main className="container mx-auto px-6 py-8">
+        {/* Hero Section */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-navy mb-4">
-            Welcome back to Law.Gen
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Your AI-powered learning companion for {state.currentProfile === 'school' ? 'school studies' : state.currentProfile === 'college' ? 'university education' : 'legal practice'}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Scale className="h-12 w-12 text-primary" />
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-purple-600 to-blue-600 bg-clip-text text-transparent">
+              LAW.GEN
+            </h1>
+          </div>
+          <p className="text-2xl text-muted-foreground mb-4">
+            🌐 Your AI-Powered Legal & Educational Platform
           </p>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+            {isAuthenticated 
+              ? `Welcome back! Continue your ${state.currentProfile === 'school' ? 'school studies' : state.currentProfile === 'college' ? 'university education' : 'legal practice'} journey`
+              : 'Your complete AI companion for legal education, academic excellence, and professional practice'}
+          </p>
+          
+          {!isAuthenticated && (
+            <div className="flex gap-4 justify-center mb-8">
+              <Button size="lg" onClick={() => navigate('/auth')} className="text-lg px-8">
+                Get Started Free
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate('/auth')} className="text-lg px-8">
+                <LogIn className="mr-2 h-5 w-5" />
+                Sign In
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Quick Actions Grid */}
@@ -68,18 +106,22 @@ const Index = () => {
         </div>
 
         {/* Profile & Settings Access */}
-        <div className="flex justify-center mb-8">
-          <div className="flex gap-4">
-            <Button variant="outline" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Profile Settings
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              App Settings
-            </Button>
+        {isAuthenticated && (
+          <div className="flex justify-center mb-8">
+            <div className="flex gap-4">
+              <Button variant="outline" className="flex items-center gap-2" onClick={() => navigate('/profile')}>
+                <User className="h-4 w-4" />
+                Profile Settings
+              </Button>
+              <Link to="/library">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  eBook Library
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Features Preview */}
         <div className="space-y-8">

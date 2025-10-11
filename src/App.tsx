@@ -8,8 +8,11 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { ProfileSelector } from "@/components/ProfileSelector";
 import { useApp } from "@/contexts/AppContext";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 import Chat from "./pages/Chat";
 import Practice from "./pages/Practice";
+import PracticeHub from "./pages/PracticeHub";
 import Library from "./pages/Library";
 import MockCourt from "./pages/MockCourt";
 import EBookLibrary from "./pages/EBookLibrary";
@@ -26,6 +29,7 @@ import EvidenceAnalyzer from "./pages/EvidenceAnalyzer";
 import LawTeacher from "./pages/LawTeacher";
 import CollaborationHub from "./pages/CollaborationHub";
 import NotFound from "./pages/NotFound";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -40,9 +44,11 @@ const AppContent = () => {
     <AppLayout>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/practice" element={<Practice />} />
-        <Route path="/library" element={<Library />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
+        <Route path="/practice" element={<ProtectedRoute><PracticeHub /></ProtectedRoute>} />
+        <Route path="/library" element={<ProtectedRoute><Library /></ProtectedRoute>} />
         <Route path="/mock-court" element={<MockCourt />} />
         <Route path="/draft-builder" element={<DraftBuilder />} />
         <Route path="/statute-navigation" element={<StatuteNavigation />} />
