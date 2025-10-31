@@ -62,6 +62,101 @@ export type Database = {
         }
         Relationships: []
       }
+      coding_problems: {
+        Row: {
+          company_tags: string[] | null
+          constraints: string | null
+          created_at: string | null
+          description: string
+          difficulty: string
+          id: string
+          input_format: string | null
+          output_format: string | null
+          solution_template: Json | null
+          tags: string[] | null
+          test_cases: Json
+          title: string
+        }
+        Insert: {
+          company_tags?: string[] | null
+          constraints?: string | null
+          created_at?: string | null
+          description: string
+          difficulty: string
+          id?: string
+          input_format?: string | null
+          output_format?: string | null
+          solution_template?: Json | null
+          tags?: string[] | null
+          test_cases: Json
+          title: string
+        }
+        Update: {
+          company_tags?: string[] | null
+          constraints?: string | null
+          created_at?: string | null
+          description?: string
+          difficulty?: string
+          id?: string
+          input_format?: string | null
+          output_format?: string | null
+          solution_template?: Json | null
+          tags?: string[] | null
+          test_cases?: Json
+          title?: string
+        }
+        Relationships: []
+      }
+      coding_submissions: {
+        Row: {
+          code: string
+          created_at: string | null
+          execution_time_ms: number | null
+          id: string
+          language: string
+          memory_used_kb: number | null
+          problem_id: string
+          status: string
+          test_cases_passed: number | null
+          total_test_cases: number | null
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          language: string
+          memory_used_kb?: number | null
+          problem_id: string
+          status: string
+          test_cases_passed?: number | null
+          total_test_cases?: number | null
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          language?: string
+          memory_used_kb?: number | null
+          problem_id?: string
+          status?: string
+          test_cases_passed?: number | null
+          total_test_cases?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coding_submissions_problem_id_fkey"
+            columns: ["problem_id"]
+            isOneToOne: false
+            referencedRelation: "coding_problems"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ebook_chapters: {
         Row: {
           chapter_number: number
@@ -145,6 +240,125 @@ export type Database = {
           subject?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      exam_attempts: {
+        Row: {
+          answers: Json
+          created_at: string | null
+          exam_id: string
+          id: string
+          score: number
+          time_taken_seconds: number | null
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          created_at?: string | null
+          exam_id: string
+          id?: string
+          score: number
+          time_taken_seconds?: number | null
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string | null
+          exam_id?: string
+          id?: string
+          score?: number
+          time_taken_seconds?: number | null
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exam_attempts_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "government_exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      government_exams: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          exam_name: string
+          exam_pattern: Json | null
+          exam_type: string
+          id: string
+          syllabus: Json | null
+          total_seats: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          exam_name: string
+          exam_pattern?: Json | null
+          exam_type: string
+          id?: string
+          syllabus?: Json | null
+          total_seats?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          exam_name?: string
+          exam_pattern?: Json | null
+          exam_type?: string
+          id?: string
+          syllabus?: Json | null
+          total_seats?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      interview_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          difficulty: string
+          duration_minutes: number | null
+          feedback: string | null
+          id: string
+          interview_type: string
+          questions: Json
+          responses: Json | null
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          difficulty: string
+          duration_minutes?: number | null
+          feedback?: string | null
+          id?: string
+          interview_type: string
+          questions: Json
+          responses?: Json | null
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          difficulty?: string
+          duration_minutes?: number | null
+          feedback?: string | null
+          id?: string
+          interview_type?: string
+          questions?: Json
+          responses?: Json | null
+          score?: number | null
+          user_id?: string
         }
         Relationships: []
       }

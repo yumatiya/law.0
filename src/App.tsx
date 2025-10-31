@@ -28,6 +28,8 @@ import VoiceTranslator from "./pages/VoiceTranslator";
 import EvidenceAnalyzer from "./pages/EvidenceAnalyzer";
 import LawTeacher from "./pages/LawTeacher";
 import CollaborationHub from "./pages/CollaborationHub";
+import GovernmentExams from "./pages/GovernmentExams";
+import SoftwareEngineer from "./pages/SoftwareEngineer";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -63,6 +65,8 @@ const AppContent = () => {
         <Route path="/law-teacher" element={<LawTeacher />} />
         <Route path="/ebook-library" element={<EBookLibrary />} />
         <Route path="/collaboration-hub" element={<CollaborationHub />} />
+        <Route path="/government-exams" element={<ProtectedRoute><GovernmentExams /></ProtectedRoute>} />
+        <Route path="/software-engineer" element={<ProtectedRoute><SoftwareEngineer /></ProtectedRoute>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -19,7 +19,9 @@ import {
   Heart,
   Languages,
   FileSearch,
-  Users
+  Users,
+  Trophy,
+  Code
 } from "lucide-react";
 
 import {
@@ -69,6 +71,8 @@ const studentNavigationItems: NavigationItem[] = [
   { title: "Emotional Support", url: "/emotional-support", icon: Heart },
   { title: "Voice Translator", url: "/voice-translator", icon: Languages },
   { title: "Collaboration Hub", url: "/collaboration-hub", icon: Users },
+  { title: "Government Exams", url: "/government-exams", icon: Trophy, profiles: ['school', 'college'] },
+  { title: "Software Engineer", url: "/software-engineer", icon: Code, profiles: ['college'] },
 ];
 
 const generalItems: NavigationItem[] = [
