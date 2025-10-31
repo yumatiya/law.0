@@ -1,22 +1,16 @@
-# Welcome to your Lovable project
+# Welcome to Law.Gen
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/f73cccbf-5bdc-4b4f-a35c-36ef620fcbd8
+Law.Gen is an AI-powered education and legal platform with three main modes: School, College, and Lawyer. Built with React, TypeScript, and modern web technologies.
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/f73cccbf-5bdc-4b4f-a35c-36ef620fcbd8) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -59,15 +53,25 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Database & Backend)
+- AI Integration (Google Gemini & OpenAI)
 
-## How can I deploy this project?
+## Features
 
-Simply open [Lovable](https://lovable.dev/projects/f73cccbf-5bdc-4b4f-a35c-36ef620fcbd8) and click on Share -> Publish.
+- **School Mode**: NCERT books, AI tutoring, practice quizzes
+- **College Mode**: Subject libraries, viva prep, project help
+- **Lawyer Mode**: Legal database, mock court, draft builder
+- **Government Exam Zone**: UPSC, SSC, Banking exam preparation
+- **Software Engineer Zone**: Coding practice, AI interviews
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment
 
-Yes, you can!
+Deploy this project using platforms like:
+- Vercel
+- Netlify
+- AWS Amplify
+- Any Node.js hosting service
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Custom Domain
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+You can connect a custom domain through your hosting provider's domain settings.
