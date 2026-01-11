@@ -6,6 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Users, MessageSquare, Send, Shield } from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
+
+// Toggle to enable or disable contributor restriction for debugging
+const ENABLE_CONTRIBUTOR_RESTRICTION = true;
+
+// Replace this with your actual unique user id or email
+const COLLABORATOR_IDENTIFIER = 'your-email@example.com'; // Replace with your actual email or user id
 
 interface Message {
   id: string;
@@ -16,6 +23,10 @@ interface Message {
 }
 
 const CollaborationHub = () => {
+  const { state } = useApp();
+  const currentUser = state.user;
+
+
   const [roomId, setRoomId] = useState('general');
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -23,9 +34,8 @@ const CollaborationHub = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Subscribe to real-time messages
-    const channel = supabase
-      .channel(`room:${roomId}`)
+const channel = supabase
+      .channel('room:' + roomId)
       .on('presence', { event: 'sync' }, () => {
         const state = channel.presenceState();
         setOnlineUsers(Object.keys(state).length);
@@ -37,8 +47,22 @@ const CollaborationHub = () => {
     };
   }, [roomId]);
 
+  const isContributorAllowed = () => {
+    if (!ENABLE_CONTRIBUTOR_RESTRICTION) return true;
+    return currentUser?.email === COLLABORATOR_IDENTIFIER;
+  };
+
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
+
+    if (!isContributorAllowed()) {
+      toast({
+        title: "Access Denied",
+        description: "You are not authorized to contribute in this room.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     try {
       const { data, error } = await supabase.functions.invoke('collaboration-hub', {
@@ -50,15 +74,15 @@ const CollaborationHub = () => {
       });
 
       if (error) throw error;
-      
+
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
-        user: 'You',
+        user: isContributorAllowed() ? 'You' : currentUser?.email || 'Unknown',
         content: newMessage,
         factCheck: data.factCheck,
         timestamp: new Date()
       }]);
-      
+
       setNewMessage('');
     } catch (error) {
       toast({
@@ -149,12 +173,20 @@ const CollaborationHub = () => {
 
           <div className="flex gap-2">
             <Input
-              placeholder="Type your message..."
+              placeholder={isContributorAllowed() ? "Type your message..." : "You are not authorized to contribute."}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && isContributorAllowed()) {
+                  sendMessage();
+                }
+              }}
+              disabled={!isContributorAllowed()}
             />
-            <Button onClick={sendMessage}>
+            <Button
+              onClick={sendMessage}
+              disabled={!isContributorAllowed()}
+            >
               <Send className="h-4 w-4" />
             </Button>
           </div>

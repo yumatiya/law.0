@@ -1,0 +1,462 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  SCHOOL_ADMIN
+  COLLEGE_ADMIN
+  LAWYER
+  SUPER_ADMIN
+}
+
+enum EducationLevel {
+  CLASS_9
+  CLASS_10
+  CLASS_11
+  CLASS_12
+  UNDERGRADUATE
+  GRADUATE
+  PHD
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  WAITLISTED
+}
+
+enum DocumentType {
+  TRANSCRIPT
+  RECOMMENDATION_LETTER
+  ESSAY
+  TEST_SCORE
+  IDENTITY_PROOF
+  OTHER
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  role          UserRole  @default(STUDENT)
+  phone         String?
+  avatar        String?
+  isVerified    Boolean   @default(false)
+  verificationToken String?
+  resetToken    String?
+  resetTokenExpiry DateTime?
+
+  // Education fields for signup
+  educationLevel String?
+  stream         String?
+  course         String?
+  language       String?  @default("english")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  student       Student?
+  schoolAdmin   SchoolAdmin?
+  collegeAdmin  CollegeAdmin?
+  lawyer        Lawyer?
+  sessions      Session[]
+  userStats     UserStats?
+  watchHistory  WatchHistory[]
+  readingProgress ReadingProgress[]
+  bookmarks     Bookmark[]
+  chatMessages  ChatMessage[]
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model Student {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  dateOfBirth     DateTime?
+  address         String?
+  city            String?
+  state           String?
+  zipCode         String?
+  country         String    @default("USA")
+  gpa             Float?
+  satScore        Int?
+  actScore        Int?
+  currentSchoolId String?
+  graduationYear  Int?
+  bio             String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentSchool   School?       @relation(fields: [currentSchoolId], references: [id])
+  applications    Application[]
+  documents       Document[]
+
+  @@index([userId])
+  @@index([currentSchoolId])
+}
+
+model School {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  city        String
+  state       String
+  zipCode     String
+  country     String   @default("USA")
+  phone       String?
+  email       String?
+  website     String?
+  logo        String?
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  admins      SchoolAdmin[]
+  students    Student[]
+
+  @@index([name])
+  @@index([city, state])
+}
+
+model SchoolAdmin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  schoolId  String
+  position  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  school    School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([schoolId])
+}
+
+model College {
+  id              String   @id @default(cuid())
+  name            String
+  address         String
+  city            String
+  state           String
+  zipCode         String
+  country         String   @default("USA")
+  phone           String?
+  email           String?
+  website         String?
+  logo            String?
+  description     String?
+  acceptanceRate  Float?
+  tuitionCost     Float?
+  studentCount    Int?
+  ranking         Int?
+  isActive        Boolean  @default(true)
+  applicationFee  Float?
+  applicationDeadline DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  admins          CollegeAdmin[]
+  applications    Application[]
+  programs        Program[]
+
+  @@index([name])
+  @@index([city, state])
+}
+
+model CollegeAdmin {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  collegeId String
+  position  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([collegeId])
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  collegeId   String
+  name        String
+  degree      String   // Bachelor's, Master's, PhD, etc.
+  department  String
+  description String?
+  duration    Int?     // in years
+  credits     Int?
+  tuition     Float?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  college      College       @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([collegeId])
+  @@index([name])
+}
+
+model Application {
+  id              String            @id @default(cuid())
+  studentId       String
+  collegeId       String
+  programId       String?
+  status          ApplicationStatus @default(DRAFT)
+  submittedAt     DateTime?
+  reviewedAt      DateTime?
+  reviewNotes     String?
+  lawyerId        String?
+  essayPrompt     String?
+  essayResponse   String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  student         Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  college         College    @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  program         Program?   @relation(fields: [programId], references: [id])
+  lawyer          Lawyer?    @relation(fields: [lawyerId], references: [id])
+  documents       Document[]
+
+  @@index([studentId])
+  @@index([collegeId])
+  @@index([programId])
+  @@index([lawyerId])
+  @@index([status])
+}
+
+model Document {
+  id            String       @id @default(cuid())
+  studentId     String
+  applicationId String?
+  type          DocumentType
+  name          String
+  url           String
+  fileSize      Int?
+  mimeType      String?
+  uploadedAt    DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relations
+  student       Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+  @@index([studentId])
+  @@index([applicationId])
+}
+
+model Lawyer {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  licenseNumber String?
+  barAdmission  String?
+  specialty     String?
+  experience    Int?     // years
+  bio           String?
+  hourlyRate    Float?
+  isAvailable   Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications  Application[]
+
+  @@index([userId])
+  @@index([isAvailable])
+}
+
+// Learning Platform Models
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  icon        String?
+  description String?
+  educationLevel EducationLevel
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  books       Book[]
+
+  @@index([educationLevel])
+  @@index([name])
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  subjectId   String
+  class       Int?     // For school level (9-12)
+  coverImage  String?
+  totalPages  Int?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  subject     Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  chapters    Chapter[]
+  bookmarks   Bookmark[]
+  watchHistory WatchHistory[]
+  readingProgress ReadingProgress[]
+
+  @@index([subjectId])
+  @@index([title])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  bookId      String
+  title       String
+  description String?
+  content     String?  // For text content
+  videoUrl    String?  // For video content
+  order       Int      @default(0)
+  duration    Int?     // in minutes for videos
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  book        Book            @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  watchHistory WatchHistory[]
+  readingProgress ReadingProgress[]
+  bookmarks   Bookmark[]
+
+  @@index([bookId])
+  @@index([order])
+}
+
+model UserStats {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  totalBooksRead  Int      @default(0)
+  totalVideosWatched Int   @default(0)
+  totalWatchTime  Int      @default(0) // in minutes
+  totalReadingTime Int     @default(0) // in minutes
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WatchHistory {
+  id          String   @id @default(cuid())
+  userId      String
+  chapterId   String
+  bookId      String
+  watchTime   Int      @default(0) // in seconds
+  completed   Boolean  @default(false)
+  lastWatched DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([chapterId])
+  @@index([bookId])
+  @@unique([userId, chapterId])
+}
+
+model ReadingProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  chapterId   String
+  bookId      String
+  progress    Float    @default(0.0) // 0.0 to 1.0
+  completed   Boolean  @default(false)
+  lastRead    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([chapterId])
+  @@index([bookId])
+  @@unique([userId, chapterId])
+}
+
+model Bookmark {
+  id          String   @id @default(cuid())
+  userId      String
+  bookId      String
+  chapterId   String?
+  note        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  chapter     Chapter? @relation(fields: [chapterId], references: [id])
+
+  @@index([userId])
+  @@index([bookId])
+  @@index([chapterId])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  userId      String
+  role        String   // 'user' | 'assistant'
+  content     String   @db.Text
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}

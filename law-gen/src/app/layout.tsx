@@ -1,13 +1,29 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import { AuthProvider } from '@/lib/context/AuthContext'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
-  title: 'Law.Gen - AI-Powered Legal Education Platform',
-  description: 'Comprehensive legal education with AI assistance',
-}
+  title: 'LAW.GEN - AI-Powered Education & Legal Ecosystem',
+  description: 'Next-generation AI Teacher, Professional AI Lawyer, and Legal Research Engine for India and the world',
+  authors: [{ name: 'Akil Umatiya', url: 'https://lawgen.com' }],
+  creator: 'Akil Umatiya',
+  keywords: ['education', 'AI teacher', 'AI lawyer', 'legal research', 'law', 'medical', 'engineering', 'court simulation', 'legal drafting'],
+  openGraph: {
+    title: 'LAW.GEN - AI-Powered Education & Legal Ecosystem',
+    description: 'Next-generation AI Teacher, Professional AI Lawyer, and Legal Research Engine for India and the world',
+    url: 'https://lawgen.com',
+    siteName: 'LAW.GEN',
+    images: ['/og-image.png'],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'LAW.GEN - AI-Powered Education & Legal Ecosystem',
+    description: 'Next-generation AI Teacher, Professional AI Lawyer, and Legal Research Engine for India and the world',
+    images: ['/og-image.png'],
+  },
+};
 
 export default function RootLayout({
   children,
@@ -16,7 +32,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className="font-sans antialiased">
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
+      </body>
     </html>
   )
 }

@@ -14,7 +14,7 @@ interface ProfileSelectorProps {
   onProfileSelect: (profileId: string) => void;
 }
 
-const profiles: ProfileOption[] = [
+const profiles: ProfileOption[] = [ 
   {
     id: "school",
     title: "School Mode",
